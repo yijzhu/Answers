@@ -1,0 +1,36 @@
+/* add css styles here (optional) */
+
+.pipeline {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem;
+}
+
+.pipeline-stage {
+  flex: 0 0 300px;
+}
+
+.pipeline-job {
+  display: flex;
+  padding: 1rem;
+  border-radius: 2rem;
+  border: 2px solid darkgray;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.pipeline-job + .pipeline-job {
+  margin-top: 0.5rem;
+}
+
+.pipeline-job-title {
+  display: flex;
+  align-items: center;
+}
+
+.pipeline-status-icon {
+  margin-right: 1rem;
+  border-radius: 50%;
+  width: 1rem;
+  height: 1rem;
+}
