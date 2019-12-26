@@ -10,31 +10,35 @@ const data = [
 ];
 const find = function(origin) {
     origin = origin || [];
+    let filteredOrigin = null;
     let filterObj = {};
 
     const context = {
         where: filter => {
             filterObj = filter;
+            filteredOrigin = null;
             return context;
         },
         orderBy: (key, direction = 'asc') => {
-            const filtered = origin.filter(item => {
-                return Object.keys(filterObj).every(filterKey => {
-                    const filterRule = filterObj[filterKey];
-                    const val = item[filterKey];
-                    return (filterRule && filterRule.exec) ? filterRule.exec(val) : true;
-                })
-            });
+            if (!filteredOrigin) {
+                filteredOrigin = origin.filter(item => {
+                    return Object.keys(filterObj).every(filterKey => {
+                        const filterRule = filterObj[filterKey];
+                        const val = item[filterKey];
+                        return (filterRule && filterRule.exec) ? filterRule.exec(val) : true;
+                    })
+                });
+            }
 
             // Sort
             if (key) {
-                filtered.sort((a, b) => {
+                filteredOrigin.sort((a, b) => {
                     const res = a[key] < b[key] ? -1 : 1;
                     return direction === 'desc' ? -res : res;
                 });
             }
 
-            return filtered;
+            return filteredOrigin;
         }
     };
     return context;
