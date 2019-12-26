@@ -12,6 +12,29 @@ const find = function(origin) {
     origin = origin || [];
     let filteredOrigin = null;
     let filterObj = {};
+    const matchers = [
+        (rule, val) => {
+            if (!rule) return true;
+            return rule.exec && !!rule.exec(val);
+        },
+        (rule, val) => {
+            if (!rule) return true;
+            return rule === val;
+        }
+    ];
+
+    function filter() {
+        if (!filteredOrigin) {
+            filteredOrigin = origin.filter(item => {
+                return Object.keys(filterObj).every(filterKey => {
+                    const filterRule = filterObj[filterKey];
+                    const val = item[filterKey];
+
+                    return matchers.some(matcher => matcher(filterRule, val));
+                })
+            });
+        }
+    }
 
     const context = {
         where: filter => {
@@ -20,15 +43,8 @@ const find = function(origin) {
             return context;
         },
         orderBy: (key, direction = 'asc') => {
-            if (!filteredOrigin) {
-                filteredOrigin = origin.filter(item => {
-                    return Object.keys(filterObj).every(filterKey => {
-                        const filterRule = filterObj[filterKey];
-                        const val = item[filterKey];
-                        return (filterRule && filterRule.exec) ? filterRule.exec(val) : filterRule === val;
-                    })
-                });
-            }
+            // filter lazily
+            filter();
 
             // Sort
             if (key) {
