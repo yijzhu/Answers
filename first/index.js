@@ -25,7 +25,7 @@ const find = function(origin) {
                     return Object.keys(filterObj).every(filterKey => {
                         const filterRule = filterObj[filterKey];
                         const val = item[filterKey];
-                        return (filterRule && filterRule.exec) ? filterRule.exec(val) : true;
+                        return (filterRule && filterRule.exec) ? filterRule.exec(val) : filterRule === val;
                     })
                 });
             }
