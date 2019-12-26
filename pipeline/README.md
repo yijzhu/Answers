@@ -12,12 +12,12 @@ npm install --save pipeline
 
 ## Usage
 
-```jsx
-import React, { Component } from 'react'
+```tsx
+import * as React from 'react'
 
 import MyComponent from 'pipeline'
 
-class Example extends Component {
+class Example extends React.Component {
   render () {
     return (
       <MyComponent />

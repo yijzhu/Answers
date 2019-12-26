@@ -1,65 +1,69 @@
-import React from 'react'
-import PropTypes from 'prop-types'
+import * as React from 'react'
 import cx from 'classnames';
 
 import styles from './styles.css'
 
-function Pipeline() {
-  this.stages = [];
+interface Pipeline {
+  stages: Stage[]
 }
 
-function Stage() {
-  this.title = null;
-  this.jobs = [];
+interface Stage {
+  title: string
+  jobs: Job[]
 }
 
-function Job() {
-  this.name = null;
-  this.status = null; // 'success' || 'fail'
-  this.time = 0; // number
+interface Job {
+  name: string
+  status: 'success' | 'fail'
+  time: number
 }
 
-const PIPELINE_FOR_DEMO = {
+const PIPELINE_FOR_DEMO: Pipeline = {
   stages: [{
     title: '编译',
     jobs: [{
       name: '编译',
       status: 'success',
-      time: '61'
+      time: 61
     }]
   }, {
     title: '部署',
     jobs: [{
       name: '部署',
       status: 'success',
-      time: '129'
+      time: 129
     }]
   }, {
     title: '代码扫描和检查',
     jobs: [{
       name: 'STC',
       status: 'success',
-      time: '146'
+      time: 146
     }, {
       name: 'PMD',
       status: 'success',
-      time: '52'
+      time: 52
     }]
   }, {
     title: '测试',
     jobs: [{
       name: '集成测试',
       status: 'fail',
-      time: '334'
+      time: 334
     }, {
       name: '单元测试',
       status: 'fail',
-      time: '334'
+      time: 334
     }]
   }]
 };
 
-export default function PipelineContainer({ pipeline = PIPELINE_FOR_DEMO, className, ...rest }) {
+
+type PipelineContainerProps = {
+  pipeline: Pipeline
+  className?: string
+}
+export default function PipelineContainer({ pipeline = PIPELINE_FOR_DEMO, className, ...rest } : PipelineContainerProps) {
   const {
     stages = []
   } = pipeline;
@@ -74,11 +78,12 @@ export default function PipelineContainer({ pipeline = PIPELINE_FOR_DEMO, classN
     </div>
   )
 }
-PipelineContainer.propTypes = {
-  pipeline: PropTypes.object
-};
 
-function StageContainer({ stage, className, ...rest }) {
+type StageContainerProps = {
+  stage: Stage
+  className?: string
+}
+function StageContainer({ stage, className, ...rest }: StageContainerProps) {
   const {
     title,
     jobs = []
@@ -93,18 +98,19 @@ function StageContainer({ stage, className, ...rest }) {
     </div>
   )
 }
-StageContainer.propTypes = {
-  stage: PropTypes.object.isRequired
-};
 
-function JobContainer({ job, className, ...rest}) {
+type JobContainerProps = {
+  job: Job
+  className?: string
+}
+function JobContainer({ job, className, ...rest}: JobContainerProps) {
   const {
     name,
     status,
     time
   } = job;
 
-  let color = 'darkgray';
+  let color: string = 'darkgray';
   if (status === 'success') {
     color = 'green';
   } else if (status === 'fail') {
@@ -120,26 +126,19 @@ function JobContainer({ job, className, ...rest}) {
     </div>
   )
 }
-JobContainer.propTypes = {
-  job: PropTypes.object.isRequired
-};
 
-function formatTime(time) {
-  if (typeof time !== 'number') return time;
-
+function formatTime(time: number): string {
   const minutes = Math.floor(time/60);
   const hours = Math.floor(minutes/60);
 
-  function addLeadingZero(number) {
-    number = number + '';
-    return number.length === 1 ? '0' + number : number;
+  function addLeadingZero(number: number): string {
+    const numberStr: string = number + '';
+    return numberStr.length === 1 ? '0' + number : numberStr;
   }
 
-  const secondsStr = addLeadingZero(time % 60);
-  const minutesStr = addLeadingZero(minutes % 60);
-  const hoursStr = addLeadingZero(hours);
+  const secondsStr: string = addLeadingZero(time % 60);
+  const minutesStr: string = addLeadingZero(minutes % 60);
+  const hoursStr: string = addLeadingZero(hours);
 
   return `${hoursStr}:${minutesStr}:${secondsStr}`;
 }
-
-
